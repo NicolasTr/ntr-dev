@@ -1,0 +1,31 @@
+proxy:
+    image: jwilder/nginx-proxy
+    ports:
+        - "80:80"
+    volumes:
+        - "/var/run/docker.sock:/tmp/docker.sock:ro"
+    
+web:
+    build: ../../cc-frontend/
+    environment:
+        VIRTUAL_HOST: www.dev.clutterco.com
+    ports:
+        - "3000:3000"
+    volumes:
+        - "../../cc-frontend/frontend/src:/srv/frontend/src"
+
+postgresql:
+    image: orchardup/postgresql:9.3
+    environment:
+        POSTGRESQL_DB: dev
+        POSTGRESQL_USER: dev
+        POSTGRESQL_PASS: dev
+
+api:
+    build: ../../cc-backend/
+    environment:
+        VIRTUAL_HOST: api.dev.clutterco.com
+    links:
+        - "postgresql"
+    volumes:
+        - "../../cc-backend/:/srv/dev"
