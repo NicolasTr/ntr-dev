@@ -23,8 +23,11 @@ postgresql:
 
 api:
     build: ../../cc-backend/
+    command: /sbin/my_init --enable-insecure-key
     environment:
         VIRTUAL_HOST: api.dev.clutterco.com
+    ports:
+        - "2201:22"
     links:
         - "postgresql"
     volumes:
